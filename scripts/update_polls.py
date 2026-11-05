@@ -134,6 +134,10 @@ def main():
         path = args[0]
     data = json.load(open(path, encoding="utf-8"))
     polls = latest_polls(html or fetch_html())
+    for key, p in polls.items():
+        print(f"FOUND {key}: {p['dates'][0]}–{p['dates'][1]} n={p['sample']} {p['shares']}")
+    if not polls:
+        print("WARNING: Wikipediasta ei löytynyt yhtään mittausriviä", file=sys.stderr)
     changed = []
     for key, p in polls.items():
         cur = data["polls"][key]
