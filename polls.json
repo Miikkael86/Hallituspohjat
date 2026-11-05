@@ -9,15 +9,15 @@
       "n": 1621,
       "nLabel": "1 621 kantansa ilmoittanutta",
       "moe": "virhemarginaali enintään noin ±2,2 %-yks.",
-      "note": "Vasemmistoliiton 12,0 % on laskettu erotuksena muiden julkaistujen lukujen summasta.",
+      "note": "",
       "links": [
         {
-          "title": "Verkkouutiset",
-          "url": "https://www.verkkouutiset.fi/a/ylen-gallup-sdp-jatkaa-suosituimpana-2/"
+          "title": "Uutissuomalainen / STT",
+          "url": "https://karjalainen.fi/uutissuomalainen/9928090"
         },
         {
-          "title": "Yle",
-          "url": "https://yle.fi/a/74-20255013"
+          "title": "Wikipedian mittauskooste",
+          "url": "https://en.wikipedia.org/wiki/Opinion_polling_for_the_2027_Finnish_parliamentary_election"
         }
       ],
       "shares": {
@@ -25,10 +25,10 @@
         "PS": 16.7,
         "KOK": 15.4,
         "KESK": 12.2,
-        "VAS": 12.0,
+        "VAS": 12.6,
         "VIHR": 8.6,
         "RKP": 4.1,
-        "KD": 4.1,
+        "KD": 3.5,
         "LIIK": 2.1
       },
       "collectedEnd": "2026-11-03"
