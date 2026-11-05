@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="fi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Hallituspohjakone</title>
+<meta name="description" content="Kokeile Suomen hallituspohjia Ylen ja HS:n tuoreimpien kannatusmittausten paikka-arvioilla. Luvut päivittyvät automaattisesti.">
+<meta property="og:title" content="Hallituspohjakone">
+<meta property="og:description" content="Riittäisivätkö paikat enemmistöön? Kokeile hallituspohjia tuoreimpien gallupien perusteella.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#1D4F8F">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M3 26a13 13 0 0 1 26 0' fill='none' stroke='%231D4F8F' stroke-width='5'/%3E%3C/svg%3E">
+<style>html{color-scheme:light}:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Source+Sans+3:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: istuntosali-kaari vasemmalla, puoluetaulukko oikealla; alla enemmistöpohjat ja menetelmä */
+:root{
+  --bg:#F3F6F9; --surface:#FFFFFF; --ink:#13202C; --muted:#5A6876; --line:#D9E0E7;
+  --accent:#1D4F8F; --accent-soft:#E3ECF7; --good:#1E7A4C; --warn:#A8620A; --bad:#B3261E;
+  --faded:#C9D2DB;
+  --f-display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --f-body:"Source Sans 3", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0E141A; --surface:#161F28; --ink:#E5EBF1; --muted:#97A5B3; --line:#2A3743;
+  --accent:#86ADE3; --accent-soft:#1D2C3D; --good:#5CC491; --warn:#E3A452; --bad:#F08B83;
+  --faded:#2F3B47; color-scheme:dark;}}
+:root[data-theme="dark"]{
+  --bg:#0E141A; --surface:#161F28; --ink:#E5EBF1; --muted:#97A5B3; --line:#2A3743;
+  --accent:#86ADE3; --accent-soft:#1D2C3D; --good:#5CC491; --warn:#E3A452; --bad:#F08B83;
+  --faded:#2F3B47; color-scheme:dark;}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.5;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 48px}
+.wrap{max-width:1180px;margin:0 auto;display:flex;flex-direction:column;gap:28px}
+h1,h2{font-family:var(--f-display);font-weight:700;text-wrap:balance;margin:0;letter-spacing:-.01em}
+h1{font-size:clamp(1.9rem,4vw,2.6rem);line-height:1.1}
+h2{font-size:1.25rem}
+p{margin:0}
+.lede{color:var(--muted);max-width:62ch;margin-top:8px}
+.eyebrow{font-family:var(--f-mono);font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+header{display:flex;flex-direction:column;gap:18px}
+.controls{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:flex-end}
+.seg{display:inline-flex;flex-wrap:wrap;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--surface)}
+.seg button{font:600 .9rem var(--f-body);color:var(--ink);background:transparent;border:0;padding:8px 14px;cursor:pointer;border-right:1px solid var(--line)}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--surface)}
+.seg button:focus-visible,.btn:focus-visible,.prow button:focus-visible,input:focus-visible,tr.click:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.field{display:flex;flex-direction:column;gap:6px}
+.srcline{font-size:.88rem;color:var(--muted)}
+.srcline strong{color:var(--ink);font-weight:600}
+.grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:24px;align-items:start}
+@media (max-width:860px){.grid{grid-template-columns:minmax(0,1fr)}}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:20px;display:flex;flex-direction:column;gap:16px;min-width:0}
+.hemi{width:100%;height:auto;display:block}
+.tally{display:flex;flex-wrap:wrap;gap:8px 28px;align-items:baseline}
+.big{font-family:var(--f-display);font-weight:700;font-size:3rem;line-height:1;font-variant-numeric:tabular-nums}
+.big small{font-size:1.1rem;color:var(--muted);font-weight:500}
+.pill{display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:.85rem;padding:3px 10px;border-radius:999px;border:1px solid currentColor}
+.pill.ok{color:var(--good)} .pill.no{color:var(--bad)} .pill.near{color:var(--warn)}
+.meter{position:relative;height:22px;border-radius:4px;background:var(--faded);overflow:hidden;display:flex}
+.meter span{height:100%}
+.meterwrap{position:relative;padding-top:18px}
+.mark{position:absolute;top:0;bottom:0;left:50.5%;width:0;border-left:2px dashed var(--ink)}
+.mark b{position:absolute;top:-2px;left:4px;font:500 .72rem var(--f-mono);white-space:nowrap}
+.probline{font-size:.95rem}
+.probline .mono{font-weight:500}
+.coal-list{display:flex;flex-wrap:wrap;gap:6px}
+.chip{display:inline-flex;align-items:center;gap:6px;font-size:.82rem;font-weight:600;padding:2px 8px 2px 4px;border-radius:999px;background:var(--accent-soft);white-space:nowrap}
+.dot{width:12px;height:12px;border-radius:50%;flex:none;display:inline-block}
+.muted{color:var(--muted)}
+.ptable{display:flex;flex-direction:column}
+.prow{display:grid;grid-template-columns:minmax(0,1fr) 84px 52px 64px;gap:10px;align-items:center;padding:7px 0;border-bottom:1px solid var(--line)}
+.prow.head{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding-top:0}
+.prow .r{text-align:right}
+.prow button.ptog{display:flex;align-items:center;gap:10px;background:none;border:0;padding:4px 0;color:var(--ink);font:600 1rem var(--f-body);cursor:pointer;text-align:left;min-width:0}
+.ptog .box{width:20px;height:20px;border-radius:5px;border:2px solid var(--muted);flex:none;display:grid;place-items:center}
+.ptog[aria-pressed="true"] .box{border-color:transparent}
+.ptog .box svg{width:13px;height:13px;opacity:0}
+.ptog[aria-pressed="true"] .box svg{opacity:1}
+.ptog .nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ptog .ab{font:500 .75rem var(--f-mono);color:var(--muted)}
+.prow input{width:100%;font:500 .95rem var(--f-mono);text-align:right;padding:5px 6px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink)}
+.prow input:disabled{opacity:.6}
+.seats{font-family:var(--f-display);font-weight:700;font-size:1.25rem;text-align:right;font-variant-numeric:tabular-nums}
+.rng{font:400 .78rem var(--f-mono);color:var(--muted);text-align:right}
+.presets{display:flex;flex-wrap:wrap;gap:8px}
+.btn{font:600 .88rem var(--f-body);padding:7px 12px;border-radius:7px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.btn:hover{border-color:var(--accent)}
+.btn.ghost{background:transparent}
+.tablewrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.95rem}
+th{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-align:left;font-weight:500;padding:6px 8px;border-bottom:1px solid var(--line)}
+td{padding:8px;border-bottom:1px solid var(--line);vertical-align:middle}
+td.num,th.num{text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+tr.click{cursor:pointer}
+tr.click:hover td{background:var(--accent-soft)}
+tr.sel td{background:var(--accent-soft)}
+.probbar{display:inline-block;width:60px;height:6px;border-radius:3px;background:var(--faded);vertical-align:middle;margin-left:8px;overflow:hidden}
+.probbar i{display:block;height:100%;background:var(--good)}
+.notes{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:24px}
+.notes p,.notes li{font-size:.92rem;color:var(--muted);max-width:65ch}
+.notes ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px}
+.notes a{color:var(--accent)}
+.row-between{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;align-items:baseline}
+.edited{font:500 .72rem var(--f-mono);color:var(--warn);text-transform:uppercase;letter-spacing:.06em}
+@media (prefers-reduced-motion:no-preference){.seatdot{transition:fill .25s ease}.meter span{transition:width .25s ease}}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <p class="eyebrow">Eduskunta · 200 paikkaa · enemmistö 101</p>
+      <h1>Hallituspohjakone</h1>
+      <p class="lede">Valitse puolueet ja katso, riittäisivätkö paikat enemmistöön tuoreimpien kannatusmittausten perusteella. Paikkamäärät ovat mallin arvioita, eivät ennusteita.</p>
+    </div>
+    <div class="controls">
+      <div class="field">
+        <span class="eyebrow" id="lbl-src">Kannatusluvut</span>
+        <div class="seg" role="group" aria-labelledby="lbl-src" id="srcSeg"></div>
+      </div>
+      <div class="field">
+        <span class="eyebrow" id="lbl-unc">Epävarmuus</span>
+        <div class="seg" role="group" aria-labelledby="lbl-unc" id="uncSeg">
+          <button id="unc-otanta" data-u="1" aria-pressed="true">Otantavirhe</button>
+          <button id="unc-laaja" data-u="2.5" aria-pressed="false">Laaja (vaaleihin asti)</button>
+        </div>
+      </div>
+    </div>
+    <p class="srcline" id="srcLine">Ladataan kannatuslukuja…</p>
+    <p class="eyebrow" id="updated"></p>
+  </header>
+
+  <div class="grid">
+    <section class="panel" aria-label="Istuntosali ja hallituspohja">
+      <svg class="hemi" id="hemi" viewBox="0 0 400 214" role="img" aria-label="Eduskunnan paikkajako"></svg>
+      <div class="tally">
+        <div class="big mono" id="coalSeats">0<small> / 200</small></div>
+        <div id="statusPill"></div>
+      </div>
+      <div class="meterwrap">
+        <div class="meter" id="meter"></div>
+        <div class="mark"><b>101</b></div>
+      </div>
+      <p class="probline" id="probLine"></p>
+      <div>
+        <p class="eyebrow" style="margin-bottom:6px">Hallituspohja</p>
+        <div class="coal-list" id="coalList"></div>
+      </div>
+      <div>
+        <p class="eyebrow" style="margin-bottom:8px">Valmiit pohjat</p>
+        <div class="presets" id="presets"></div>
+      </div>
+    </section>
+
+    <section class="panel" aria-label="Puolueet">
+      <div class="row-between">
+        <h2>Puolueet</h2>
+        <span class="edited" id="editedTag" hidden>Muokattu</span>
+      </div>
+      <div class="ptable" id="ptable">
+        <div class="prow head"><span>Puolue</span><span class="r">Kannatus %</span><span class="r">Paikat</span><span class="r">80 % väli</span></div>
+      </div>
+      <div class="presets">
+        <button class="btn ghost" id="clearBtn">Tyhjennä valinta</button>
+        <button class="btn ghost" id="resetBtn">Palauta mittauksen luvut</button>
+      </div>
+    </section>
+  </div>
+
+  <section class="panel" aria-label="Enemmistöpohjat">
+    <div class="row-between">
+      <h2>Pienimmät enemmistöpohjat</h2>
+      <p class="muted" style="font-size:.9rem">Pohjat, joista ei voi poistaa yhtäkään puoluetta menettämättä enemmistöä. Napsauta riviä valitaksesi sen.</p>
+    </div>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Puolueet</th><th class="num">Puolueita</th><th class="num">Paikat</th><th class="num">Enemmistön tn.</th></tr></thead>
+        <tbody id="minBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="notes" aria-label="Menetelmä ja lähteet">
+    <div>
+      <h2 style="margin-bottom:10px">Miten paikat lasketaan</h2>
+      <ul>
+        <li>Manner-Suomen 199 paikkaa jaetaan d'Hondtin menetelmällä erikseen kussakin 12 vaalipiirissä niiden nykyisillä paikkamäärillä. Ahvenanmaan yksi paikka lasketaan aina Ahvenanmaan edustajalle.</li>
+        <li>Valtakunnallinen kannatus jaetaan vaalipiireihin karkeilla alueprofiileilla (esim. RKP:n kannatus painottuu Vaasaan ja Uudellemaalle, keskustan pohjoiseen). Profiilit on viritetty niin, että malli tuottaa vuoden 2023 vaaleista enintään kolmen paikan virheen puoluetta kohden.</li>
+        <li>Pienten puolueiden paikat ovat epävarmimpia, koska yksittäinen paikka riippuu muutaman vaalipiirin tuloksesta ja ehdokkaiden henkilökohtaisista äänistä.</li>
+        <li>Todennäköisyydet tulevat 800 simulaatiosta, joissa kannatukseen lisätään satunnaisvaihtelua otoskoon mukaan. ”Laaja” kertoo vaihtelun 2,5:llä kuvaamaan kannatusmuutoksia ennen huhtikuun 2027 vaaleja.</li>
+      </ul>
+    </div>
+    <div>
+      <h2 style="margin-bottom:10px">Lähteet</h2>
+      <ul id="srcNotes"><li>Ladataan lähteitä…</li></ul>
+    </div>
+  </section>
+</div>
+
+<script>
+(function(){
+const PARTIES=[ // istumajärjestys vasemmalta oikealle
+ {id:'VAS', name:'Vasemmistoliitto', c:'#C8102E'},
+ {id:'SDP', name:'SDP', c:'#F0566B'},
+ {id:'VIHR',name:'Vihreät', c:'#5BB12F'},
+ {id:'KESK',name:'Keskusta', c:'#00824A'},
+ {id:'RKP', name:'RKP', c:'#E5A124'},
+ {id:'AL',  name:'Ahvenanmaa', c:'#5E8FC2', fixed:true},
+ {id:'KD',  name:'Kristillisdemokraatit', c:'#3048A6'},
+ {id:'LIIK',name:'Liike Nyt', c:'#A0307A'},
+ {id:'KOK', name:'Kokoomus', c:'#00628F'},
+ {id:'PS',  name:'Perussuomalaiset', c:'#E8C930'},
+];
+const PID=PARTIES.filter(p=>!p.fixed).map(p=>p.id);
+const MON=['','1','2','3','4','5','6','7','8','9','10','11','12'];
+const fiDate=iso=>{if(!iso)return '';const [y,m,d]=iso.split('-');return (+d)+'.'+(+m)+'.'+y;};
+const monthTag=p=>{const iso=p.published||'';const m=iso?+iso.split('-')[1]:null,y=iso?iso.split('-')[0]:'';if(m)return MON[m]+'/'+y;const c=(p.collected||'').match(/(\d+)\.(\d{4})\s*$/);return c?c[1]+'/'+c[2]:'';};
+let SOURCES={};
+function buildSources(data){
+  const y=data.polls.yle,h=data.polls.hs;
+  const desc=p=>`<strong>${p.org}</strong> · kerätty ${p.collected}${p.published?' · julkaistu '+fiDate(p.published):''} · ${p.nLabel} · ${p.moe}`;
+  SOURCES={
+   yle:{label:'Yle '+monthTag(y),desc:desc(y),n:y.n,s:{...y.shares}},
+   hs:{label:'HS '+monthTag(h),desc:desc(h),n:h.n,s:{...h.shares}},
+   avg:{label:'Keskiarvo',desc:`<strong>Yle- ja HS-mittausten keskiarvo</strong> · Yle ${monthTag(y)} ja HS ${monthTag(h)} painottamatta.`,n:Math.round(y.n+h.n),s:{}},
+   e2023:{label:'Vaalit 2023', desc:'<strong>Eduskuntavaalit 2.4.2023</strong> · toteutunut paikkajako. Jos muutat lukuja, paikat lasketaan mallilla.', n:null,
+     s:{KOK:20.8,PS:20.1,SDP:20.0,KESK:11.3,VAS:7.1,VIHR:7.0,RKP:4.3,KD:4.2,LIIK:2.4},
+     seats:{KOK:48,PS:46,SDP:43,KESK:23,VIHR:13,VAS:11,RKP:9,KD:5,LIIK:1,AL:1}},
+  };
+  PID.forEach(k=>SOURCES.avg.s[k]=+((y.shares[k]+h.shares[k])/2).toFixed(2));
+  const li=p=>`<li>${p.org}, kerätty ${p.collected}${p.published?', julkaistu '+fiDate(p.published):''} (${p.nLabel}). ${p.note?p.note+' ':''}${p.links.map(l=>`<a href="${l.url}" target="_blank" rel="noopener">${l.title}</a>`).join(' · ')}</li>`;
+  $('srcNotes').innerHTML=li(y)+li(h)+'<li>Eduskuntavaalit 2.4.2023: toteutunut ääniosuus ja paikkajako.</li><li>Muiden puolueiden ja ryhmien osuus (noin 2 %) ei tuota mallissa paikkoja.</li>';
+  $('updated').textContent='Luvut päivitetty '+fiDate(data.updated)+' · tarkistetaan viikoittain';
+}
+
+const PRESETS=[
+ {name:'Nykyinen hallituspohja', set:['KOK','PS','RKP','KD']},
+ {name:'SDP + Kokoomus', set:['SDP','KOK']},
+ {name:'SDP + Kokoomus + RKP', set:['SDP','KOK','RKP']},
+ {name:'SDP + PS', set:['SDP','PS']},
+ {name:'SDP + Keskusta + Vas + Vihr', set:['SDP','KESK','VAS','VIHR']},
+ {name:'SDP + Keskusta + Vihr + RKP', set:['SDP','KESK','VIHR','RKP']},
+ {name:'Kokoomus + PS + Keskusta', set:['KOK','PS','KESK']},
+];
+
+// vaalipiirit: HEL UUS VS SAT HAM PIR KAS SAV VAA KSU OUL LAP
+const D=[23,37,17,8,14,20,15,15,16,10,18,6];
+const PROF={
+ RKP:[1.3,1.9,1.3,0.15,0.05,0.05,0.25,0.05,4.0,0.05,0.05,0.05],
+ KESK:[0.25,0.5,0.8,1.1,1.0,0.8,1.2,1.7,1.6,1.7,2.3,2.4],
+ VIHR:[1.8,1.25,1.1,0.75,0.9,1.15,0.7,0.8,0.55,0.95,0.8,0.7],
+ KOK:[1.15,1.25,1.1,1.0,1.05,1.05,1.0,0.8,0.7,0.85,0.7,0.65],
+ VAS:[1.3,0.75,1.1,1.1,0.85,1.2,0.75,1.0,0.5,1.05,1.2,1.6],
+ KD:[0.6,0.9,0.9,1.1,0.9,1.2,0.85,1.1,1.6,1.7,1.1,0.8],
+ LIIK:[2.6,1.0,0.8,0.7,0.8,0.8,0.8,0.7,0.6,0.7,0.8,0.7],
+};
+const TOT=D.reduce((a,b)=>a+b,0);
+for(const k in PROF){const s=PROF[k].reduce((a,m,i)=>a+m*D[i],0)/TOT;PROF[k]=PROF[k].map(m=>m/s);}
+
+function model(sh){
+  const out={};PID.forEach(k=>out[k]=0);
+  for(let i=0;i<D.length;i++){
+    const loc=PID.map(k=>sh[k]*(PROF[k]?PROF[k][i]:1));
+    const a=new Array(PID.length).fill(0);
+    for(let s=0;s<D[i];s++){
+      let best=0,bv=-1;
+      for(let j=0;j<PID.length;j++){const v=loc[j]/(a[j]+1);if(v>bv){bv=v;best=j;}}
+      a[best]++;
+    }
+    PID.forEach((k,j)=>out[k]+=a[j]);
+  }
+  out.AL=1;return out;
+}
+function randn(){let u=0,v=0;while(!u)u=Math.random();while(!v)v=Math.random();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);}
+const NSIM=800;
+function simulate(sh,n,mult){
+  const neff=n/1.5,res=[];
+  for(let r=0;r<NSIM;r++){
+    const s={};
+    PID.forEach(k=>{const p=sh[k]/100;const sd=Math.sqrt(Math.max(p,0.005)*(1-p)/neff)*100*mult;s[k]=Math.max(0.05,sh[k]+randn()*sd);});
+    res.push(model(s));
+  }
+  return res;
+}
+
+// state
+let src='yle', shares={}, edited=false, mult=1;
+let coal=new Set(['SDP','KOK']);
+let seats={}, sims=null;
+try{const saved=JSON.parse(localStorage.getItem('hpk-coal')||'null');if(Array.isArray(saved))coal=new Set(saved.filter(k=>PARTIES.some(p=>p.id===k)));}catch(e){}
+function saveCoal(){try{localStorage.setItem('hpk-coal',JSON.stringify([...coal]));}catch(e){}}
+
+const $=id=>document.getElementById(id);
+const fmt=(x,d=1)=>x.toLocaleString('fi-FI',{minimumFractionDigits:d,maximumFractionDigits:d});
+const pct=x=>Math.round(x*100)+' %';
+
+// source buttons
+const seg=$('srcSeg');
+function buildSeg(){seg.innerHTML='';Object.entries(SOURCES).forEach(([k,v])=>{const b=document.createElement('button');b.id='src-'+k;b.textContent=v.label;b.dataset.k=k;b.setAttribute('aria-pressed',k===src);b.onclick=()=>{src=k;shares={...SOURCES[k].s};edited=false;[...seg.children].forEach(x=>x.setAttribute('aria-pressed',x.dataset.k===k));recompute();};seg.appendChild(b);});}
+[...$('uncSeg').children].forEach(b=>b.onclick=()=>{mult=+b.dataset.u;[...$('uncSeg').children].forEach(x=>x.setAttribute('aria-pressed',x===b));recompute();});
+
+// party rows
+const ptable=$('ptable');
+const CHECK='<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+PARTIES.forEach(p=>{
+  const row=document.createElement('div');row.className='prow';
+  row.innerHTML=`<button class="ptog" id="tog-${p.id}" aria-pressed="false"><span class="box">${CHECK}</span><span class="dot" style="background:${p.c}"></span><span class="nm">${p.name}</span></button>`+
+   (p.fixed?`<span class="r muted mono" style="font-size:.8rem">1 paikka</span>`:`<input type="number" id="in-${p.id}" min="0" max="60" step="0.1" aria-label="${p.name} kannatus prosentteina">`)+
+   `<span class="seats" id="seat-${p.id}">–</span><span class="rng" id="rng-${p.id}"></span>`;
+  ptable.appendChild(row);
+  row.querySelector('.ptog').onclick=()=>{coal.has(p.id)?coal.delete(p.id):coal.add(p.id);saveCoal();renderCoal();};
+  if(!p.fixed){const inp=row.querySelector('input');inp.addEventListener('input',()=>{const v=parseFloat(String(inp.value).replace(',','.'));if(isNaN(v))return;shares[p.id]=Math.max(0,Math.min(60,v));edited=true;debounce();});}
+});
+let t=null;function debounce(){clearTimeout(t);t=setTimeout(recompute,300);}
+
+// presets
+PRESETS.forEach(pr=>{const b=document.createElement('button');b.className='btn';b.innerHTML=pr.set.map(id=>`<span class="dot" style="background:${PARTIES.find(p=>p.id===id).c};width:9px;height:9px"></span>`).join('')+' '+pr.name;b.onclick=()=>{coal=new Set(pr.set);saveCoal();renderCoal();};$('presets').appendChild(b);});
+$('clearBtn').onclick=()=>{coal=new Set();saveCoal();renderCoal();};
+$('resetBtn').onclick=()=>{shares={...SOURCES[src].s};edited=false;recompute();};
+
+// hemicycle geometry
+const ROWS=9,R0=72,R1=192,CX=200,CY=204;
+const pts=[];
+(function(){
+  const radii=[...Array(ROWS)].map((_,i)=>R0+(R1-R0)*i/(ROWS-1));
+  const sr=radii.reduce((a,b)=>a+b,0);
+  let counts=radii.map(r=>Math.round(200*r/sr));
+  counts[ROWS-1]+=200-counts.reduce((a,b)=>a+b,0);
+  radii.forEach((r,i)=>{const c=counts[i];for(let j=0;j<c;j++){const th=Math.PI-j*Math.PI/(c-1);pts.push({x:CX+r*Math.cos(th),y:CY-r*Math.sin(th),th,r});}});
+  pts.sort((a,b)=>b.th-a.th||a.r-b.r);
+})();
+const hemi=$('hemi');const NS='http://www.w3.org/2000/svg';
+const dots=pts.map(p=>{const c=document.createElementNS(NS,'circle');c.setAttribute('cx',p.x.toFixed(1));c.setAttribute('cy',p.y.toFixed(1));c.setAttribute('r','5.3');c.setAttribute('class','seatdot');hemi.appendChild(c);return c;});
+const hemiTxt=document.createElementNS(NS,'text');hemiTxt.setAttribute('x',CX);hemiTxt.setAttribute('y',CY-8);hemiTxt.setAttribute('text-anchor','middle');hemiTxt.setAttribute('style','font:700 34px var(--f-display);fill:var(--ink)');hemi.appendChild(hemiTxt);
+const hemiSub=document.createElementNS(NS,'text');hemiSub.setAttribute('x',CX);hemiSub.setAttribute('y',CY+8);hemiSub.setAttribute('text-anchor','middle');hemiSub.setAttribute('style','font:500 10px var(--f-mono);fill:var(--muted);letter-spacing:.06em');hemiSub.textContent='HALLITUSPOHJAN PAIKAT';hemi.appendChild(hemiSub);
+
+function recompute(){
+  PARTIES.forEach(p=>{if(!p.fixed){const inp=$('in-'+p.id);if(document.activeElement!==inp)inp.value=(+shares[p.id]).toFixed(1);}});
+  const S=SOURCES[src];
+  if(src==='e2023'&&!edited){seats={...S.seats};sims=null;}
+  else{seats=model(shares);sims=simulate(shares,S.n||4000,mult);}
+  $('editedTag').hidden=!edited;
+  $('srcLine').innerHTML=S.desc+(edited?' · <strong>lukuja muokattu käsin</strong>':'');
+  // ranges
+  PARTIES.forEach(p=>{
+    $('seat-'+p.id).textContent=seats[p.id];
+    let rng='';
+    if(sims&&!p.fixed){const v=sims.map(s=>s[p.id]).sort((a,b)=>a-b);const lo=v[Math.floor(NSIM*.1)],hi=v[Math.floor(NSIM*.9)];rng=lo===hi?String(lo):lo+'–'+hi;}
+    $('rng-'+p.id).textContent=rng;
+  });
+  renderCoal();renderMinimal();
+}
+function coalSeats(set,s){let n=0;set.forEach(k=>n+=s[k]||0);return n;}
+function prob(set){if(!sims)return null;let c=0;for(const s of sims)if(coalSeats(set,s)>=101)c++;return c/NSIM;}
+
+function renderCoal(){
+  PARTIES.forEach(p=>$('tog-'+p.id).setAttribute('aria-pressed',coal.has(p.id)));
+  // tog box colors
+  PARTIES.forEach(p=>{$('tog-'+p.id).querySelector('.box').style.background=coal.has(p.id)?p.c:'transparent';});
+  const n=coalSeats(coal,seats);
+  $('coalSeats').innerHTML=n+'<small> / 200</small>';
+  hemiTxt.textContent=n;
+  const pill=$('statusPill');
+  if(coal.size===0)pill.innerHTML='<span class="muted">Valitse puolueita</span>';
+  else if(n>=101)pill.innerHTML=`<span class="pill ok">Enemmistö, ylitys ${n-100}</span>`;
+  else if(n>=95)pill.innerHTML=`<span class="pill near">Vajaa ${101-n} paikkaa</span>`;
+  else pill.innerHTML=`<span class="pill no">Vajaa ${101-n} paikkaa</span>`;
+  // hemicycle
+  let i=0;
+  PARTIES.forEach(p=>{const on=coal.has(p.id);for(let j=0;j<(seats[p.id]||0);j++){const d=dots[i++];if(!d)break;d.style.fill=on?p.c:'var(--faded)';d.style.stroke=on?'none':p.c;d.style.strokeWidth=on?0:1.1;d.style.strokeOpacity=.55;}});
+  for(;i<dots.length;i++){dots[i].style.fill='var(--faded)';dots[i].style.stroke='none';}
+  // meter
+  $('meter').innerHTML=PARTIES.filter(p=>coal.has(p.id)).map(p=>`<span title="${p.name} ${seats[p.id]}" style="width:${seats[p.id]/2}%;background:${p.c}"></span>`).join('');
+  // prob
+  const pr=prob(coal);
+  if(coal.size===0)$('probLine').textContent='';
+  else if(pr===null)$('probLine').innerHTML='Toteutunut vaalitulos 2023, ei epävarmuutta.';
+  else $('probLine').innerHTML=`Enemmistö <span class="mono">${pct(pr)}</span> simulaatioista <span class="muted">(${mult>1?'laaja epävarmuus':'pelkkä otantavirhe'})</span>.`;
+  $('coalList').innerHTML=coal.size?PARTIES.filter(p=>coal.has(p.id)).map(p=>`<span class="chip"><span class="dot" style="background:${p.c}"></span>${p.name} <span class="mono muted">${seats[p.id]}</span></span>`).join(''):'<span class="muted" style="font-size:.9rem">Ei valittuja puolueita. Napsauta puoluetta listassa tai valitse valmis pohja.</span>';
+  // highlight table row
+  document.querySelectorAll('#minBody tr').forEach(tr=>{const set=tr.dataset.set.split(',');tr.classList.toggle('sel',set.length===coal.size&&set.every(k=>coal.has(k)));});
+}
+
+function renderMinimal(){
+  const ids=PARTIES.map(p=>p.id),out=[];
+  for(let m=1;m<(1<<ids.length);m++){
+    const set=ids.filter((_,i)=>m&(1<<i));if(set.length>5)continue;
+    const n=set.reduce((a,k)=>a+seats[k],0);if(n<101)continue;
+    if(set.some(k=>n-seats[k]>=101))continue;
+    out.push({set,n,p:prob(set)});
+  }
+  out.sort((a,b)=>a.set.length-b.set.length||b.n-a.n);
+  const body=$('minBody');
+  body.innerHTML=out.slice(0,16).map(o=>`<tr class="click" tabindex="0" data-set="${o.set.join(',')}"><td><div class="coal-list">${o.set.map(id=>{const p=PARTIES.find(x=>x.id===id);return `<span class="chip"><span class="dot" style="background:${p.c}"></span>${p.name}</span>`;}).join('')}</div></td><td class="num">${o.set.length}</td><td class="num">${o.n}</td><td class="num">${o.p===null?'–':pct(o.p)+`<span class="probbar"><i style="width:${o.p*100}%"></i></span>`}</td></tr>`).join('')||'<tr><td colspan="4" class="muted">Ei enintään viiden puolueen enemmistöpohjia.</td></tr>';
+  body.querySelectorAll('tr.click').forEach(tr=>{const go=()=>{coal=new Set(tr.dataset.set.split(','));saveCoal();renderCoal();};tr.onclick=go;tr.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();go();}};});
+  renderCoal();
+}
+fetch('polls.json',{cache:'no-cache'}).then(r=>{if(!r.ok)throw new Error(r.status);return r.json();}).then(data=>{
+  buildSources(data);buildSeg();shares={...SOURCES.yle.s};recompute();
+}).catch(()=>{$('srcLine').innerHTML='<strong>Kannatuslukuja ei saatu ladattua.</strong> Lataa sivu uudelleen hetken kuluttua.';});
+})();
+</script>
+
+</body>
+</html>

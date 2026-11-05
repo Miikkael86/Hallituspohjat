@@ -1,0 +1,65 @@
+{
+  "updated": "2026-11-05",
+  "polls": {
+    "yle": {
+      "label": "Yle",
+      "org": "Yle / Taloustutkimus",
+      "collected": "12.10.–3.11.2026",
+      "published": "2026-11-05",
+      "n": 1621,
+      "nLabel": "1 621 kantansa ilmoittanutta",
+      "moe": "virhemarginaali enintään noin ±2,2 %-yks.",
+      "note": "Vasemmistoliiton 12,0 % on laskettu erotuksena muiden julkaistujen lukujen summasta.",
+      "links": [
+        {
+          "title": "Verkkouutiset",
+          "url": "https://www.verkkouutiset.fi/a/ylen-gallup-sdp-jatkaa-suosituimpana-2/"
+        },
+        {
+          "title": "Yle",
+          "url": "https://yle.fi/a/74-20255013"
+        }
+      ],
+      "shares": {
+        "SDP": 22.9,
+        "PS": 16.7,
+        "KOK": 15.4,
+        "KESK": 12.2,
+        "VAS": 12.0,
+        "VIHR": 8.6,
+        "RKP": 4.1,
+        "KD": 4.1,
+        "LIIK": 2.1
+      },
+      "collectedEnd": "2026-11-03"
+    },
+    "hs": {
+      "label": "HS",
+      "org": "HS / Verian",
+      "collected": "15.9.–19.10.2026",
+      "published": "",
+      "n": 2850,
+      "nLabel": "4 076 haastateltua",
+      "moe": "virhemarginaali suurimmilla puolueilla noin ±1,7 %-yks.",
+      "note": "",
+      "links": [
+        {
+          "title": "Wikipedian mittauskooste",
+          "url": "https://en.wikipedia.org/wiki/Opinion_polling_for_the_2027_Finnish_parliamentary_election"
+        }
+      ],
+      "shares": {
+        "KOK": 16.2,
+        "PS": 15.3,
+        "SDP": 23.3,
+        "KESK": 13.8,
+        "VAS": 11.6,
+        "VIHR": 8.6,
+        "RKP": 4.0,
+        "KD": 2.8,
+        "LIIK": 2.4
+      },
+      "collectedEnd": "2026-10-19"
+    }
+  }
+}
